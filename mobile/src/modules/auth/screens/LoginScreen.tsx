@@ -7,9 +7,7 @@ export const LoginScreen = () => {
   const [value, setValue] = useState("");
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{
-        title: "Login"
-      }} />
+      <Stack.Screen/>
       <TextInput
         style={styles.input}
         value={value}

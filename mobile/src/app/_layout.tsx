@@ -5,7 +5,10 @@ export default function Layout() {
   return (
     <>
       <StatusBar style="auto" />
-      <Stack />
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
     </>
   );
 }
