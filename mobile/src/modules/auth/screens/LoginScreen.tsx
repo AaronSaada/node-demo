@@ -1,46 +1,112 @@
 import { router, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
+import { useRef, useState } from "react";
+import {
+  Alert,
+  Button,
+  Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import { auth, firestore } from "../../utils/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+const logo = require("../resources/ort-logo.png");
 
 export const LoginScreen = () => {
-  const [value, setValue] = useState("");
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+
+  const scrollViewRef = useRef<ScrollView>(null);
+  const passwordRef = useRef<TextInput>(null);
+
+  const onSubmit = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, login, password);
+      router.push("/home");
+    } catch {
+      Alert.alert("Error", "Invalid credentials");
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Stack.Screen/>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={setValue}
-      />
-      <View style={styles.button}>
-        <Button title="Go" onPress={() => {
-          router.push("/home");
-        }} />
+    <ScrollView
+      ref={scrollViewRef}
+      style={{ flex: 1 }}
+      contentContainerStyle={{ paddingBottom: 300 }}
+    >
+      <View style={styles.container}>
+        <Stack.Screen
+          options={{
+            title: "Login",
+          }}
+        />
+        <Image style={styles.image} source={logo} />
+        <TextInput
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoComplete="username"
+          textContentType="username"
+          style={styles.input}
+          value={login}
+          onChangeText={setLogin}
+          placeholder="Login"
+          onFocus={() => {
+            console.log("scroll");
+            scrollViewRef.current?.scrollToEnd();
+          }}
+          returnKeyType="next"
+          onSubmitEditing={() => {
+            passwordRef.current?.focus();
+          }}
+        />
+        <TextInput
+          ref={passwordRef}
+          secureTextEntry
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Password"
+          returnKeyType="send"
+        />
+        <View style={styles.button}>
+          <Button title="Submit" onPress={onSubmit} />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
     padding: 16,
     gap: 16,
   },
   input: {
     borderWidth: 1,
     borderRadius: 10,
-    flex: 1,
     padding: 16,
+  },
+  image: {
+    alignSelf: "center",
   },
   button: {
     borderWidth: 1,
-    borderRadius: "100%",
+    borderRadius: 50,
     padding: 16,
   },
 });

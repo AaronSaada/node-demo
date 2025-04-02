@@ -5,6 +5,19 @@ export default function TabLayout() {
   return (
     <Tabs
         screenOptions={({ route }) => ({
+            tabBarStyle:{
+                backgroundColor: '#3D3D3D',
+                height: 70
+            },
+            tabBarLabelPosition: 'below-icon',
+            tabBarItemStyle: {
+                justifyContent: 'center',
+                alignItems: 'center',
+            },
+            tabBarLabelStyle: {
+                marginBottom: 5, 
+                fontSize: 12,
+            },
             tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
